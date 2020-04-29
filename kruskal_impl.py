@@ -87,12 +87,14 @@ city_x = []
 city_y = []
 
 # event handler untuk plot titik dengan mouse
+dots = []
 def onclick(event):
     print('button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
           (event.button, event.x, event.y, event.xdata, event.ydata))
     city_x.append(event.xdata)
     city_y.append(event.ydata)
-    plt.plot(event.xdata, event.ydata, 'or')
+    ln, = plt.plot(event.xdata, event.ydata, 'or')
+    dots.append(ln)
     fig.canvas.draw()
 
 # fungsi untuk menghitung jarak lurus (x1, y1) ke (x2, y2)
@@ -134,6 +136,15 @@ def press(event):
                     y = [city_y[i], city_y[j]]
                     ln, = plt.plot(x, y, '-')  # agar bisa dihapus
                     connections.append(ln)
+
+    elif(event.key == '.'):
+        # hapus plot
+        for d in dots:
+            d.remove()
+        dots.clear()
+        city_x.clear()
+        city_y.clear()
+
     else:
         return
     fig.canvas.draw()
@@ -144,4 +155,6 @@ fig.canvas.mpl_connect('button_press_event', onclick)
 fig.canvas.mpl_connect('key_press_event', press)
 
 # gambar canvas
+im = plt.imread('sumatra.gif')
+implot = plt.imshow(im, extent=[0,10,0,10])
 plt.show()
